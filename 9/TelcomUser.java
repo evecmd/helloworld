@@ -1,79 +1,97 @@
-package µçĞÅ¼Æ·ÑÏµÍ³;
+package ç”µä¿¡è®¡è´¹ç³»ç»Ÿ;
 
-import java.sql.Date;
-import java.util.Random;
-
-public class TelcomUser {
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+class TelcomUser {
 	private String phoneNumber;
 	private String callTo;
 	private StringBuffer communicationRecords;
-    public TelcomUser (String phoneNumber) {
-    	this.phoneNumber = phoneNumber;
-    	this.communicationRecords = new StringBuffer();	
-    }
-    //Ä£ÄâÍ¨»°¼ÇÂ¼µÄÉú³É
-	void generateCommunicateRecords() {
-		//Ëæ»úÉú³ÉÍ¨»°¼ÇÂ¼ÊıÄ¿
+	public TelcomUser(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+		this.communicationRecords = new StringBuffer();
+	}
+	
+	//æ¨¡æ‹Ÿé€šè¯è®°å½•çš„ç”Ÿæˆ
+	void generateCommunicateRecord() {
+		//éšæœºç”Ÿæˆé€šè¯è®°å½•æ•°ç›®
 		int recordNum = new Random().nextInt(10);
-		for(int i=0;i<=recordNum;i++) {
-			//Ëæ»úÉú³ÉµÚiÌõÍ¨»°¼ÇÂ¼
+		for(int i = 0; i <= recordNum; i++) {
+			//éšæœºç”Ÿæˆç¬¬iæ¡é€šè¯è®°å½•
+			//å¼€å§‹æ—¶é—´ï¼Œå½“å‰æ—¶é—´ä¹‹å‰çš„æŸä¸ªéšæœºæ—¶é—´
 			
-			//¿ªÊ¼Ê±¼ä£¬µ±Ç°Ê±¼äÖ®Ç°µÄÄ³¸öËæ»úÊ±¼ä
-			long timeStart = System.currentTimeMillis()-new Random().nextInt(36000000);
-			//¿ªÊ¼Ê±¼ä¿ªÊ¼ºóµÄÊ®·ÖÖÓÄÚËæ»úµÄÒ»¸öÊ±¼ä£¬ÖÁÉÙÒ»·ÖÖÓ
+			/* ç”¨System.currentTimeMillis()ç²¾ç¡®åˆ°æ¯«ç§’
+			long timeStart = System.currentTimeMillis() - new Random().nextInt(36000000);
+			//ç»“æŸæ—¶é—´å¼€å§‹åçš„ååˆ†é’Ÿå†…éšæœºçš„ä¸€ä¸ªæ—¶é—´ï¼Œè‡³å°‘ä¸€åˆ†é’Ÿ
 			long timeEnd = timeStart + 60000 + new Random().nextInt(600000);
-			//±»½ĞºÅÂë
+			*/
 			
-			//²åÈëÍ¨»°¼ÇÂ¼
-			this.communicationRecords.append(this.phoneNumber +
+			//ç”¨Calendarè·å–å½“å‰æ—¶é—´
+			Calendar cal = Calendar.getInstance();
+			//éšæœºå‡å»è‹¥å¹²å°æ—¶ï¼ˆ10å°æ—¶ä»¥å†…ï¼‰
+			cal.add(Calendar.HOUR, - new Random().nextInt(10));
+			//è·å¾—å¯¹åº”æ¯«ç§’
+			long timeStart = cal.getTimeInMillis();
+			//ç»“æŸæ—¶é—´å¼€å§‹åçš„ååˆ†é’Ÿå†…éšæœºçš„ä¸€ä¸ªæ—¶é—´ï¼Œè‡³å°‘ä¸€åˆ†é’Ÿ
+			long timeEnd = timeStart + 60000 + new Random().nextInt(600000);
+			//è¢«å«å·ç 
+			this.callTo = getCallToPhoneNumber();
+			//æ’å…¥é€šè¯è®°å½•
+			this.communicationRecords.append(this.phoneNumber + 
 					"," + timeStart + 
 					"," + timeEnd + 
-					"," + this.callTo +
+					"," + this.callTo+
 					";");
-			
 		}
 	}
-	//Ëæ»úÉú³É±»½ĞºÅÂë£¨ºóËÄÎ»Ëæ»ú£©²¢·µ»Ø
-	@SuppressWarnings("unused")
+	
+	//éšæœºç”Ÿæˆè¢«å«å·ç ï¼ˆåå››ä½éšæœºï¼‰å¹¶è¿”å›
 	private String getCallToPhoneNumber() {
-				return "1380372" + String.valueOf(new Random().nextInt(10))
-				    + String.valueOf(new Random().nextInt(10)) 
-				    + String.valueOf(new Random().nextInt(10)) 
-				    + String.valueOf(new Random().nextInt(10));
-		}
-	//Ä£Äâ¼Æ·Ñ°ì·¨£¬ÒÔ×Ö·û´®µÄĞÎÊ½·µ»Ø±£ÁôËÄÎ»Ğ¡ÊıµÄ¼Æ·Ñ½á¹û
-    @SuppressWarnings("unused")
-	private String accountFee(long timeStart,long timeEnd) {
-    	//Ã¿·ÖÖÓÊÕ·Ñ*Ôª
-    	double feePerMinute = 0.2;
-    	//Í¨»°·ÖÖÓÊı°´ËÄÉáÎåÈë¼ÆËã
-    	int minutes= Math.round((timeEnd-timeStart)/60000);
-    	double feeTotal = feePerMinute * minutes;
-    	return String.format("%.4f", feeTotal);
-    }
-    //´òÍ¨»°¼ÇÂ¼
+		return "1380372" + String.valueOf(new Random().nextInt(10))
+			 + String.valueOf(new Random().nextInt(10))
+			 + String.valueOf(new Random().nextInt(10))
+			 + String.valueOf(new Random().nextInt(10));
+	}
+	
+	//æ¨¡æ‹Ÿè®¡è´¹åŠæ³•ï¼Œä»¥å­—ç¬¦ä¸²çš„å½¢å¼è¿”å›ä¿ç•™4ä½å°æ•°çš„è®¡è´¹ç»“æœ
+	private String accountFee(long timeStart, long timeEnd) {
+		//æ¯åˆ†é’Ÿæ”¶è´¹*å…ƒ
+		double feePerMinute = 0.2;
+		//é€šè¯åˆ†é’Ÿæ•°æŒ‰å››èˆäº”å…¥è®¡ç®—
+		int minutes = Math.round((timeEnd - timeStart)/60000);
+		double feeTotal = feePerMinute * minutes;
+		return String.format("%.4f", feeTotal);
+	}
+	
+	//æ‰“å°é€šè¯è®°å½•
 	void printDetails() {
-		//»ñÈ¡È«²¿Í¨»°¼ÇÂ¼
-		String alllRecords = this.communicationRecords.toString();
-		//·Ö¸îÍ¨»°¼ÇÂ¼
-		String [] recordArray = alllRecords.split(";");
-		//Ñ­»··Ö¸î¼ÇÂ¼ÄÚµÄÃ¿Ò»Ïî²¢Êä³ö
-		for(int i = 0;i < recordArray.length; i++) {
+		//è·å–å…¨éƒ¨é€šè¯è®°å½•
+		String allRecords = this.communicationRecords.toString();
+		//åˆ†å‰²é€šè¯è®°å½•
+		String [] recordArray = allRecords.split(";");
+		//å¾ªç¯åˆ†å‰²è®°å½•å†…çš„æ¯ä¸€é¡¹å¹¶è¾“å‡º
+		for(int i = 0; i < recordArray.length; i++) {
+			System.out.println("---------é€šè¯è®°å½•åˆ†å‰²çº¿---------");
 			String [] recordField = recordArray[i].split(",");
-			System.out.println("Ö÷½Ğ£º" + recordField[0]);
-			System.out.println("±»½Ğ£º" + recordField[3]);
-			System.out.println("Í¨»°¿ªÊ¼Ê±¼ä£º" + new Date(Long.parseLong(recordField[1])));
-			System.out.println("Í¨»°½áÊøÊ±¼ä£º" + new Date(Long.parseLong(recordField[2])));
-			System.out.println("¼Æ·Ñ£º" 
-			       + accountFee(Long.parseLong(recordField[1]), Long.parseLong(recordField[2])
-			       + "Ôª¡£"));
+			System.out.println("ä¸»å«ï¼š" + recordField[0]);
+			System.out.println("è¢«å«ï¼š" + recordField[3]);
+			Date timeStart = new Date(Long.parseLong(recordField[1]));
+			Date timeEnd = new Date(Long.parseLong(recordField[2]));
+			DateFormat mediumFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyå¹´MMæœˆddæ—¥ hhæ—¶mmåˆ†ssç§’");
+			//DateFormat
+			/*
+			System.out.println("é€šè¯å¼€å§‹æ—¶é—´ï¼š" + mediumFormat.format(timeStart));
+			System.out.println("é€šè¯ç»“æŸæ—¶é—´ï¼š" + mediumFormat.format(timeEnd));
+			*/
+			
+			//SimpleDateFormat			
+			System.out.println("é€šè¯å¼€å§‹æ—¶é—´ï¼š" + simpleDateFormat.format(timeStart));
+			System.out.println("é€šè¯ç»“æŸæ—¶é—´ï¼š" + simpleDateFormat.format(timeEnd));
+			
+			System.out.println("è®¡è´¹ï¼š" 
+					+ accountFee(Long.parseLong(recordField[1]), Long.parseLong(recordField[2]))
+					+ " å…ƒã€‚");
 		}
-			
 	}
-	private String accountFee(long parseLong, String string) {
-		// TODO ×Ô¶¯Éú³ÉµÄ·½·¨´æ¸ù
-		return null;
-	}
-
-			
- }
+}
